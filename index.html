@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Colorful Stopwatch</title>
+
+<style>
+/* 🌈 Colorful Animated Background */
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(-45deg, #ff6ec4, #7873f5, #42e695, #f9d423);
+    background-size: 400% 400%;
+    animation: gradientBG 12s ease infinite;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 🧊 Glass Card */
+.container {
+    text-align: center;
+    backdrop-filter: blur(15px);
+    background: rgba(255,255,255,0.1);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    width: 320px;
+}
+
+/* ⏱ Time Display */
+.time {
+    font-size: 40px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* 🔘 Buttons */
+button {
+    margin: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.08);
+}
+
+.start { background: #4CAF50; color: white; }
+.pause { background: #f39c12; color: white; }
+.reset { background: #e74c3c; color: white; }
+.lap   { background: #3498db; color: white; }
+
+/* 📋 Lap list */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+    max-height: 150px;
+    overflow-y: auto;
+    text-align: left;
+}
+
+li {
+    padding: 5px;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Stopwatch</h2>
+    <div class="time" id="display">00:00:00</div>
+
+    <button class="start" onclick="start()">Start</button>
+    <button class="pause" onclick="pause()">Pause</button>
+    <button class="reset" onclick="reset()">Reset</button>
+    <button class="lap" onclick="lap()">Lap</button>
+
+    <ul id="laps"></ul>
+</div>
+
+<script>
+let startTime = 0;
+let elapsedTime = 0;
+let timerInterval;
+let running = false;
+
+function formatTime(ms) {
+    let totalSeconds = Math.floor(ms / 1000);
+    let hours = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds % 3600) / 60);
+    let seconds = totalSeconds % 60;
+
+    return (
+        String(hours).padStart(2,'0') + ":" +
+        String(minutes).padStart(2,'0') + ":" +
+        String(seconds).padStart(2,'0')
+    );
+}
+
+function updateDisplay() {
+    elapsedTime = Date.now() - startTime;
+    document.getElementById("display").textContent = formatTime(elapsedTime);
+}
+
+function start() {
+    if (!running) {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(updateDisplay, 1000);
+        running = true;
+    }
+}
+
+function pause() {
+    clearInterval(timerInterval);
+    running = false;
+}
+
+function reset() {
+    clearInterval(timerInterval);
+    running = false;
+    elapsedTime = 0;
+    document.getElementById("display").textContent = "00:00:00";
+    document.getElementById("laps").innerHTML = "";
+}
+
+function lap() {
+    if (running) {
+        let li = document.createElement("li");
+        li.textContent = "Lap: " + formatTime(elapsedTime);
+        document.getElementById("laps").appendChild(li);
+    }
+}
+</script>
+
+</body>
+</html>
