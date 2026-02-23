@@ -3,3 +3,4 @@ start button is to start the timer/watch
 reset button is to start from the first/beginning
 pause button is to pause the timer
 lap button is to find/fetch the tiime lapse of the timer/watch
+TASK1#ProdigyInfotech
